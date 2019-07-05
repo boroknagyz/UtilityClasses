@@ -17,67 +17,65 @@
 
 #pragma once
 
+#include <vector>
+
 template <typename T>
 class Matrix {
 private:
-    friend class RowProxy;
-    friend class ConstRowProxy;
+  friend class RowProxy;
+  friend class ConstRowProxy;
 
-    class RowProxy {
-    public:
-        RowProxy(Matrix& m, int rowNo) :
-            matrix(m),
-            rowNo(rowNo) {
-        }
+  class RowProxy {
+  public:
+      RowProxy(Matrix& m, int rowNo) :
+          matrix(m),
+          rowNo(rowNo) {
+      }
 
-        T& operator[](int colNo) {
-            return matrix.data[matrix.colSize * rowNo + colNo];
-        }
-    private:
-        Matrix& matrix;
-        int rowNo;
-    };
+      T& operator[](int colNo) {
+          return matrix.data[matrix.colSize * rowNo + colNo];
+      }
+  private:
+      Matrix& matrix;
+      int rowNo;
+  };
 
-    class ConstRowProxy {
-    public:
-        ConstRowProxy(const Matrix& m, int rowNo) :
-            matrix(m),
-            rowNo(rowNo) {
-        }
+  class ConstRowProxy {
+  public:
+      ConstRowProxy(const Matrix& m, int rowNo) :
+          matrix(m),
+          rowNo(rowNo) {
+      }
 
-        T operator[](int colNo) const {
-            return matrix.data[matrix.colSize * rowNo + colNo];
-        }
-    private:
-        const Matrix& matrix;
-        int rowNo;
-    };
+      T operator[](int colNo) const {
+          return matrix.data[matrix.colSize * rowNo + colNo];
+      }
+  private:
+      const Matrix& matrix;
+      int rowNo;
+  };
 
 public:
-    Matrix() = default;
-    Matrix(int rowSize, int colSize, const T& defaultVal = T()) :
-        rowSize(rowSize),
-        colSize(colSize),
-        data(rowSize * colSize, defaultVal) {
-    }
-    Matrix(const Matrix& other) = default;
-    Matrix(Matrix&& temp) = default;
+  Matrix() = default;
+  Matrix(int rowSize, int colSize, const T& defaultVal = T()) :
+      rowSize(rowSize),
+      colSize(colSize),
+      data(rowSize * colSize, defaultVal) {
+  }
+  Matrix(const Matrix& other) = default;
+  Matrix(Matrix&& temp) = default;
 
-    Matrix& operator=(const Matrix& other) = default;
-    Matrix& operator=(Matrix&& temp) = default;
+  Matrix& operator=(const Matrix& other) = default;
+  Matrix& operator=(Matrix&& temp) = default;
 
-    RowProxy operator[](int rowNo) {
-        return RowProxy(*this, rowNo);
-    }
-    ConstRowProxy operator[](int rowNo) const {
-        return ConstRowProxy(*this, rowNo);
-    }
-    int rowCount() const { return rowSize; }
-    int colCount() const { return colSize; }
+  RowProxy operator[](int rowNo) { return RowProxy(*this, rowNo); }
+  ConstRowProxy operator[](int rowNo) const { return ConstRowProxy(*this, rowNo); }
+
+  int rowCount() const { return rowSize; }
+  int colCount() const { return colSize; }
 private:
-    int rowSize = 0;
-    int colSize = 0;
-    std::vector<T> data;
+  int rowSize = 0;
+  int colSize = 0;
+  std::vector<T> data;
 };
-
 
